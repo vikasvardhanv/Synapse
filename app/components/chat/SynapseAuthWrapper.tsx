@@ -13,41 +13,41 @@ import { toast } from 'sonner';
 import { fetchOptIns } from '~/lib/convexOptins';
 import { setSynapseDebugProperty } from 'synapse-agent/utils/synapseDebug';
 import { useAuth } from '@workos-inc/authkit-react';
-type ChefAuthState =
+type SynapseAuthState =
   | {
-      kind: 'loading';
-    }
+    kind: 'loading';
+  }
   | {
-      kind: 'unauthenticated';
-    }
+    kind: 'unauthenticated';
+  }
   | {
-      kind: 'fullyLoggedIn';
-      sessionId: Id<'sessions'>;
-    };
+    kind: 'fullyLoggedIn';
+    sessionId: Id<'sessions'>;
+  };
 
-const ChefAuthContext = createContext<{
-  state: ChefAuthState;
-}>(null as unknown as { state: ChefAuthState });
+const SynapseAuthContext = createContext<{
+  state: SynapseAuthState;
+}>(null as unknown as { state: SynapseAuthState });
 
-export function useChefAuth() {
-  const state = useContext(ChefAuthContext);
+export function useSynapseAuth() {
+  const state = useContext(SynapseAuthContext);
   if (state === null) {
-    throw new Error('useChefAuth must be used within a ChefAuthProvider');
+    throw new Error('useSynapseAuth must be used within a SynapseAuthProvider');
   }
   return state.state;
 }
 
-export function useChefAuthContext() {
-  const state = useContext(ChefAuthContext);
+export function useSynapseAuthContext() {
+  const state = useContext(SynapseAuthContext);
   if (state === null) {
-    throw new Error('useChefAuth must be used within a ChefAuthProvider');
+    throw new Error('useSynapseAuth must be used within a SynapseAuthProvider');
   }
   return state;
 }
 
 export const SESSION_ID_KEY = 'sessionIdForConvex';
 
-export const ChefAuthProvider = ({
+export const SynapseAuthProvider = ({
   children,
   redirectIfUnauthenticated,
 }: {
@@ -167,7 +167,7 @@ export const ChefAuthProvider = ({
 
   const isLoading = sessionId === undefined || isConvexAuthLoading;
   const isUnauthenticated = sessionId === null || !isAuthenticated;
-  const state: ChefAuthState = isLoading
+  const state: SynapseAuthState = isLoading
     ? { kind: 'loading' }
     : isUnauthenticated
       ? { kind: 'unauthenticated' }
@@ -179,5 +179,5 @@ export const ChefAuthProvider = ({
     window.location.href = '/';
   }
 
-  return <ChefAuthContext.Provider value={{ state }}>{children}</ChefAuthContext.Provider>;
+  return <SynapseAuthContext.Provider value={{ state }}>{children}</SynapseAuthContext.Provider>;
 };

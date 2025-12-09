@@ -25,7 +25,7 @@ import { SquaresPlusIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from '@ui/Tooltip';
 import { setSelectedTeamSlug, useSelectedTeamSlug } from '~/lib/stores/convexTeams';
 import { convexProjectStore } from '~/lib/stores/convexProject';
-import { useChefAuth } from './ChefAuthWrapper';
+import { useSynapseAuth } from './SynapseAuthWrapper';
 import { getConvexAuthToken, useConvexSessionIdOrNullOrLoading } from '~/lib/stores/sessionId';
 import { KeyboardShortcut } from '@ui/KeyboardShortcut';
 import { Button } from '@ui/Button';
@@ -113,7 +113,7 @@ export const MessageInput = memo(function MessageInput({
 }) {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const sessionId = useConvexSessionIdOrNullOrLoading();
-  const chefAuthState = useChefAuth();
+  const chefAuthState = useSynapseAuth();
   const selectedTeamSlug = useSelectedTeamSlug();
   const convex = useConvex();
 

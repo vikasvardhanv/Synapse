@@ -1,5 +1,5 @@
 import { useTeamsInitializer } from '~/lib/stores/startup/useTeamsInitializer';
-import { ChefAuthProvider } from '~/components/chat/ChefAuthWrapper';
+import { SynapseAuthProvider } from '~/components/chat/SynapseAuthWrapper';
 import { json } from '@vercel/remix';
 import type { LoaderFunctionArgs, MetaFunction } from '@vercel/remix';
 import { SettingsContent } from '~/components/SettingsContent.client';
@@ -25,8 +25,8 @@ export default function Settings() {
   useTeamsInitializer();
 
   return (
-    <ChefAuthProvider redirectIfUnauthenticated={true}>
+    <SynapseAuthProvider redirectIfUnauthenticated={true}>
       <ClientOnly>{() => <SettingsContent />}</ClientOnly>
-    </ChefAuthProvider>
+    </SynapseAuthProvider>
   );
 }

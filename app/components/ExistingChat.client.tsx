@@ -1,6 +1,6 @@
 import { useConvexChatExisting } from '~/lib/stores/startup';
 import { Chat } from './chat/Chat';
-import { ChefAuthProvider } from './chat/ChefAuthWrapper';
+import { SynapseAuthProvider } from './chat/SynapseAuthWrapper';
 import { setPageLoadChatId } from '~/lib/stores/chatId';
 import { sessionIdStore } from '~/lib/stores/sessionId';
 import { Loading } from './Loading';
@@ -19,11 +19,11 @@ export function ExistingChat({ chatId }: { chatId: string }) {
 
   return (
     <>
-      <ChefAuthProvider redirectIfUnauthenticated={true}>
+      <SynapseAuthProvider redirectIfUnauthenticated={true}>
         <UserProvider>
           <ExistingChatWrapper chatId={chatId} />
         </UserProvider>
-      </ChefAuthProvider>
+      </SynapseAuthProvider>
       <Toaster />
     </>
   );

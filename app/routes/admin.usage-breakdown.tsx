@@ -1,5 +1,5 @@
 import { useTeamsInitializer } from '~/lib/stores/startup/useTeamsInitializer';
-import { ChefAuthProvider } from '~/components/chat/ChefAuthWrapper';
+import { SynapseAuthProvider } from '~/components/chat/SynapseAuthWrapper';
 import type { MetaFunction } from '@vercel/remix';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { useState, useEffect } from 'react';
@@ -17,13 +17,13 @@ export default function PromptDebug() {
   useTeamsInitializer();
 
   return (
-    <ChefAuthProvider redirectIfUnauthenticated={true}>
+    <SynapseAuthProvider redirectIfUnauthenticated={true}>
       <ClientOnly>
         {() => {
           return <UsageBreakdownContent />;
         }}
       </ClientOnly>
-    </ChefAuthProvider>
+    </SynapseAuthProvider>
   );
 }
 

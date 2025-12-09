@@ -23,63 +23,72 @@ echo 'VITE_CONVEX_URL=placeholder' >> .env.local
 npx convex dev --configure existing --team convex --project chef --once
 ```
 
-Explanation:
+# Synapse Development
 
-Clone the 100MB repo (don't worry, it's not much code) into a dir called synapse.
-We use Node.js version 20 to develop even though in production on Vercel backend code runs in Vercel's Node.js 22 environment!
-This project uses `pnpm` instead of `npm`. Download an .env.local from Vercel.
-Add `VITE_CONVEX_URL` because otherwise `npx convex dev` will incorrectly guess that you want to use `CONVEX_URL` as the client environment variable (Nicolas added a fix to the convex CLI that will be in the next client release so we can avoid this.)
-Connect to the same Convex project as the rest of us so that you get some environment variables populated in your dev deployment automatically.
+## Deployment
 
-### Developing
+### Staging
 
-```
-pnpm i
-pnpm run dev
+The Synapse staging environment is deployed to Vercel at [synapse-staging.convex.dev](https://synapse-staging.convex.dev). It is automatically deployed on every push to `main`. It uses the `synapse-staging` Convex prod deployment.
 
-# and in another terminal,
+To deploy manual changes to the `synapse-staging` Convex deployment:
 
-npx convex dev
-
-# now visit http://127.0.0.1:5173
-# make sure to use this port and 127.0.0.1 instead of localhost as the hostname, it's been specifically listed in our WorkOS application.
-# Wait a few seconds, and then RELOAD THE PAGE! Unfortunately this is currently required
-# to use the hot-reloading dev server.
+```bash
+npx vercel link --scope convex-dev --project synapse-staging -y
+# Set environment variables from the Vercel project...
+npx vercel env pull .env.staging
+# Deploy to the Convex prod deployment
+npx dotenv -e .env.staging -- npx convex deploy
 ```
 
-### Submitting PRs
+### Production
 
-Probably set up an editor plugin for running prettier on save.
+The Synapse production environment is deployed to Vercel at [synapse.convex.dev](https://synapse.convex.dev). It is manually deployed via promotion from staging. It uses the `synapse` Convex prod deployment.
 
-We have a commit queue that blocks on tests, formatting, lints and typechecking.
-Run `pnpm run lint:fix` for lints and formatting, `pnpm run test`for tests (or skip this,
-there are very few tests so you're unlikely to break any), and `pnpm run typecheck` for typechecking.
+To promote staging to production:
+1. Go to the [Vercel dashboard](https://vercel.com/convex-dev/synapse/deployments).
+2. Find the latest deployment from `main`.
+3. Click "Promote to Production".
 
-Hit "Merge when ready" on your own PR once it's ready.
+To deploy manual changes to the `synapse` Convex deployment:
 
-We have deploy previews, click the link on
-your PR or push a branch and go to [vercel.com/convex-dev/chef/deployments](https://vercel.com/convex-dev/chef/deployments)
-to find your preview deploy.
-
-Test your work, we don't have e2e tests.
-
-### Deploy Process
-
-Push from main to staging whenever it makes sense, it's not a protected branch on GitHub.
-
-```
-git checkout main
-git pull
-git push origin main:staging
+```bash
+npx vercel link --scope convex-dev --project synapse -y
+# Set environment variables from the Vercel project...
+npx vercel env pull .env.production
+# Deploy to the Convex prod deployment
+npx dotenv -e .env.production -- npx convex deploy
 ```
 
-Make a PR from staging to release using [go/chef-release](https://go.cvx.is/chef-release) and confirm that
-the evals look good once they run (they should take ~10 mins). All of the evals should have an `isSuccess`
-rate of 100%. (Do NOT merge this PR because the GitHub merge queue doesn't allow fast-forward only merges)
+## Local Development
+
+To run Synapse locally against the `synapse-staging` Convex deployment:
+```bash
+npx convex dev --configure existing --team convex --project synapse-staging --once
+```
+
+To run Synapse locally against the `synapse` Convex deployment:
+```bash
+npx convex dev --configure existing --team convex --project synapse --once
+```
+(warning: this will connect to the PROD database).
+
+## Release Process
+
+1. QA the staging URL: [synapse-staging.convex.dev](https://synapse-staging.convex.dev).
+2. If it looks good, promote the latest deployment to production on Vercel.
+   - Go to your PR or push a branch and go to [vercel.com/convex-dev/synapse/deployments](https://vercel.com/convex-dev/synapse/deployments)
+   - Click "Promote to Production".
+3. Make a PR from staging to release using [go/synapse-release](https://go.cvx.is/synapse-release) and confirm that
+   the diff looks correct.
+   The evals look good once they run (they should take ~10 mins). All of the evals should have an `isSuccess`
+   rate of 100%. (Do NOT merge this PR because the GitHub merge queue doesn't allow fast-forward only merges)
+4. Announce in the #project-synapse Slack channel when you do this.
+
 While you're waiting for evals to run, manually test staging.
 
 Merge the staging branch into release using the command below.
-Announce in the #project-chef Slack channel when you do this.
+Announce in the #project-synapse Slack channel when you do this.
 
 ```
 git checkout staging
@@ -93,7 +102,7 @@ can use the Vercel instant rollbacks to prompt old deployments to production.
 ### Auth
 
 - Users sign in with their regular Convex account through WorkOS.
-- Users choose a team to create a new project in for app they conconct with Chef.
+- Users choose a team to create a new project in for app they conconct with Synapse.
   Note that this is _not_ the OAuth flow that we offer to customers; if a customer wants this,
   they need to use the OAuth flow that grants them access to a user's specific Convex project.
 - You'll need the following env vars set in `.env.local` (values are in 1Password under `flex .env.local`)
@@ -107,9 +116,9 @@ can use the Vercel instant rollbacks to prompt old deployments to production.
 
 You will need a lot of terminals
 
-- just run-big-brain-for-chef-dev
+- just run-big-brain-for-synapse-dev
 - just run-dash
-- Switch chef .env.local env vars to the dev variants (from 1Password)
+- Switch synapse .env.local env vars to the dev variants (from 1Password)
 - Set VITE_CONVEX_URL to 'placeholder' and remove CONVEX_URL
 - just convex-bb dev
 - Set VITE_CONVEX_SITE_URL to match the newly updated VITE_CONVEX_URL (but .convex.site instead)

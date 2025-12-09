@@ -1,7 +1,7 @@
 import * as braintrust from 'braintrust';
-import { ChefResult } from './types.js';
+import { SynapseResult } from './types.js';
 
-export async function chefScorer(props: braintrust.EvalScorerArgs<string, ChefResult, void>) {
+export async function synapseScorer(props: braintrust.EvalScorerArgs<string, SynapseResult, void>) {
   return [
     {
       name: '1/Deploys',

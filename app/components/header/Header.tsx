@@ -12,7 +12,7 @@ import { DownloadButton } from './DownloadButton';
 import { LoggedOutHeaderButtons } from './LoggedOutHeaderButtons';
 import { profileStore, setProfile } from '~/lib/stores/profile';
 import { Menu as MenuComponent, MenuItem as MenuItemComponent } from '@ui/Menu';
-import { SESSION_ID_KEY } from '~/components/chat/ChefAuthWrapper';
+import { SESSION_ID_KEY } from '~/components/chat/SynapseAuthWrapper';
 import { FeedbackButton } from './FeedbackButton';
 import { DiscordButton } from './DiscordButton';
 import { PromptDebugButton } from './PromptDebugButton';

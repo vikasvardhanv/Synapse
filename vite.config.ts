@@ -31,25 +31,25 @@ export default defineConfig((config) => {
     ssr:
       config.command === 'build'
         ? {
-            // noExternal: true,
-            //
-            // Some dependencies are hard to bundler.
-            external: [
-              // the bundler must think this has side effects because I can't
-              // bundle it without problems
-              'cloudflare',
-              // something about eval
-              '@protobufjs/inquire',
-              // doesn't actually help, remove this
-              '@protobufjs/inquire?commonjs-external',
+          // noExternal: true,
+          //
+          // Some dependencies are hard to bundler.
+          external: [
+            // the bundler must think this has side effects because I can't
+            // bundle it without problems
+            'cloudflare',
+            // something about eval
+            '@protobufjs/inquire',
+            // doesn't actually help, remove this
+            '@protobufjs/inquire?commonjs-external',
 
-              // these were guesses to fix a bundling issue, must have
-              // needed at least on of the not to be bundled.
-              '@sentry/remix',
+            // these were guesses to fix a bundling issue, must have
+            // needed at least on of the not to be bundled.
+            '@sentry/remix',
 
-              'vite-plugin-node-polyfills',
-            ],
-          }
+            'vite-plugin-node-polyfills',
+          ],
+        }
         : { noExternal: ['@protobufjs/inquire'] },
     build: {
       // this enabled top-level await
@@ -86,6 +86,7 @@ export default defineConfig((config) => {
     resolve: {
       alias: {
         buffer: 'vite-plugin-node-polyfills/polyfills/buffer',
+        path: 'vite-plugin-node-polyfills/polyfills/path',
         ...(config.mode === 'test' ? { 'lz4-wasm': 'lz4-wasm/dist/index.js' } : {}),
       },
     },
@@ -100,7 +101,7 @@ export default defineConfig((config) => {
       // Now we could probably remove some since we're using Node.js in Vercel
       // instead of Cloudflare or Vercel Edge workers.
       nodePolyfills({
-        include: ['buffer', 'process', 'stream'],
+        include: ['buffer', 'process', 'stream', 'path'],
         globals: {
           Buffer: true,
           process: true, // this is actually require for some terminal stuff
@@ -109,7 +110,7 @@ export default defineConfig((config) => {
         },
         protocolImports: true,
         // Exclude Node.js modules that shouldn't be polyfilled in Cloudflare
-        exclude: ['child_process', 'fs', 'path'],
+        exclude: ['child_process', 'fs'],
       }),
       // Required to run the file write tool locally
       {
@@ -146,6 +147,7 @@ export default defineConfig((config) => {
         project: '4509097600811008',
         // Only upload source maps for production
         disable: process.env.VERCEL_ENV !== 'production',
+        telemetry: false,
       }),
     ],
     envPrefix: ['VITE_'],

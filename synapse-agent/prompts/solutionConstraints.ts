@@ -179,10 +179,11 @@ export function solutionConstraints(options: SystemPromptOptions) {
 function templateInfo() {
   return stripIndents`
   <template_info>
-    The Chef WebContainer environment starts with a full-stack app template fully loaded at '/home/project',
-    the current working directory. Its dependencies are specified in the 'package.json' file and already
-    installed in the 'node_modules' directory. You MUST use this template. This template uses the following
-    technologies:
+    The Synapse WebContainer environment starts with a full-stack app template fully loaded at '/home/project',
+    so you do not need to initialize a project or install dependencies for the started template.
+    However, if you add new libraries, you must install them via npm install <package>.
+    Do not give instructions to the user on how to run their app or deploy it, that is handled
+    within Synapse. They can download the code and do it themselves.
     - Vite + React for the frontend
     - TailwindCSS for styling
     - Convex for the database, functions, scheduling, HTTP handlers, and search.

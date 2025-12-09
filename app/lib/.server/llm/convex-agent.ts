@@ -460,7 +460,7 @@ async function storeDebugPrompt(
       finishReason,
       modelId,
       usage: buildUsageRecord(usage),
-      chefTokens,
+      synapseTokens: chefTokens,
     } satisfies Metadata;
 
     const formData = new FormData();

@@ -9,7 +9,7 @@ import { Toaster } from '~/components/ui/Toaster';
 import { setSelectedTeamSlug, useSelectedTeamSlug, waitForSelectedTeamSlug } from '~/lib/stores/convexTeams';
 import { TeamSelector } from '~/components/convex/TeamSelector';
 import { useTeamsInitializer } from '~/lib/stores/startup/useTeamsInitializer';
-import { ChefAuthProvider, useChefAuth } from '~/components/chat/ChefAuthWrapper';
+import { SynapseAuthProvider, useSynapseAuth } from '~/components/chat/SynapseAuthWrapper';
 import { useParams } from '@remix-run/react';
 import { Loading } from '~/components/Loading';
 import type { MetaFunction } from '@vercel/remix';
@@ -44,9 +44,9 @@ export const loader = async (args: LoaderFunctionArgs) => {
 export default function ShareProject() {
   return (
     <>
-      <ChefAuthProvider redirectIfUnauthenticated={false}>
+      <SynapseAuthProvider redirectIfUnauthenticated={false}>
         <ShareProjectContent />
-      </ChefAuthProvider>
+      </SynapseAuthProvider>
       <Toaster />
     </>
   );
@@ -61,7 +61,7 @@ function ShareProjectContent() {
   }
 
   useTeamsInitializer();
-  const chefAuthState = useChefAuth();
+  const chefAuthState = useSynapseAuth();
 
   const cloneChat = useMutation(api.share.clone);
   const convex = useConvex();

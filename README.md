@@ -16,16 +16,24 @@ Visit our [documentation](https://docs.convex.dev/chef) to learn more about Chef
 The easiest way to build with Synapse is through our hosted [webapp](https://synapse.convex.dev), which includes a generous free tier. If you want to
 run Synapse locally, you can follow the guide below.
 
-> [!IMPORTANT]
-> Chef is provided as-is, using an authentication configuration specific to Convex's internal control plane that manages user accounts.
+# Synapse: The AI App Builder
 
-If you are planning on developing a fork of Chef for production use or re-distribution, your fork will need to replace the existing authentication system with your own. We recommend using the [OAuth Authorization Code Grant](https://docs.convex.dev/platform-apis/oauth-applications#implementing-oauth) flow to authorize access to Convex teams or projects. [Read more about available Platform APIs](https://docs.convex.dev/platform-apis).
+Synapse is a Remix app that builds full-stack React apps using Convex.
 
-Chef is easy to use for local development without changes. Read on for instructions for using Chef locally.
+It generates apps by running the `synapseTask` function in `test-lab/synapseTask.ts`.
+
+## Architecture
+
+Synapse is a "self-hostable"> [!IMPORTANT]
+> Synapse is provided as-is, using an authentication configuration specific to Convex's internal control plane that manages user accounts.
+
+If you are planning on developing a fork of Synapse for production use or re-distribution, your fork will need to replace the existing authentication system with your own. We recommend using the [OAuth Authorization Code Grant](https://docs.convex.dev/platform-apis/oauth-applications#implementing-oauth) flow to authorize access to Convex teams or projects. [Read more about available Platform APIs](https://docs.convex.dev/platform-apis).
+
+Synapse is easy to use for local development without changes. Read on for instructions for using Synapse locally.
 
 ### Running Locally
 
-Note: This will use the hosted Convex control plane to provision Convex projects. However, Chef tokens used in this enviroment will not count towards usage in your Convex account.
+Note: This will use the hosted Convex control plane to provision Convex projects. However, Synapse tokens used in this enviroment will not count towards usage in your Convex account.
 
 **1. Clone the project**
 
@@ -51,9 +59,9 @@ npx convex dev --once # follow the steps to create a Convex project in your team
 
 Note: `nvm` only works on Mac and Linux. If you are using Windows, you may have to find an alternative.
 
-**3. Set up Chef OAuth application**
+**3. Set up Synapse OAuth application**
 
-Go to the Convex [dashboard](https://dashboard.convex.dev/team/settings/applications/oauth-apps) and create an OAuth application. The team you use to create the application will be the only team you can sign-in with on local Chef. Redirect URIs will not matter, but you can set one to http://127.0.0.1:5173 (or whatever port you’ll run the Chef UI on) so that the form can be submitted.
+Go to the Convex [dashboard](https://dashboard.convex.dev/team/settings/applications/oauth-apps) and create an OAuth application. The team you use to create the application will be the only team you can sign-in with on local Synapse. Redirect URIs will not matter, but you can set one to http://127.0.0.1:5173 (or whatever port you’ll run the Synapse UI on) so that the form can be submitted.
 
 **4. Set up Convex deployment**
 
@@ -77,9 +85,9 @@ OPENAI_API_KEY=<your api key>
 XAI_API_KEY=<your api key>
 ```
 
-Note: You can also add your own API keys through the Chef settings page.
+Note: You can also add your own API keys through the Synapse settings page.
 
-**6. Run Chef backend and frontend**
+**6. Run Synapse backend and frontend**
 
 Run the following commands in your terminal:
 
@@ -108,6 +116,6 @@ Note: Synapse is accessible at http://127.0.0.1:{port}/ and will not work proper
 
 - `convex/` contains the database that stores chats and user metadata.
 
-- `template/` contains the template that we use to start all Chef projects.
+- `template/` contains the template that we use to start all Synapse projects.
 
 - `test-lab/` contains a test harness for the Synapse agent loop.

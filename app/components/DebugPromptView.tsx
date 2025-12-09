@@ -91,7 +91,7 @@ type AllPromptsForUserInteraction = {
     cachedCompletionTokens: number;
     totalOutputTokens: number;
     modelId: string[];
-    totalChefTokens: number;
+    totalSynapseTokens: number;
   };
 };
 
@@ -167,8 +167,8 @@ function formatNumber(num: number): string {
   return new Intl.NumberFormat().format(num);
 }
 
-function formatChefTokenPrice(chefTokens: number): string {
-  const rawPrice = (chefTokens / 1_000_000) * 0.1;
+function formatSynapseTokenPrice(synapseTokens: number): string {
+  const rawPrice = (synapseTokens / 1_000_000) * 0.1;
   return rawPrice < 0.01 ? rawPrice.toFixed(3) : Number(rawPrice.toFixed(2)).toString();
 }
 
@@ -180,7 +180,7 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
   const promptTokensTotal = promptAndResponse.usage.promptTokens;
   const cachedPromptTokens = promptAndResponse.usage.cachedPromptTokens;
   const outputTokens = promptAndResponse.usage.completionTokens;
-  const chefTokens = promptAndResponse.chefTokens || 0;
+  const synapseTokens = promptAndResponse.synapseTokens || 0;
 
   // Calculate total characters
   const totalInputChars = (prompt || []).reduce((sum, msg) => sum + getMessageCharCount(msg), 0);
@@ -218,10 +218,10 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
               <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(outputTokens)}</span>{' '}
               completion tokens ({formatNumber(totalOutputChars)} chars)
             </div>
-            {chefTokens > 0 && (
+            {synapseTokens > 0 && (
               <div>
-                <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(chefTokens)}</span> chef
-                tokens (${formatChefTokenPrice(chefTokens)})
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(synapseTokens)}</span> synapse
+                tokens (${formatSynapseTokenPrice(synapseTokens)})
               </div>
             )}
             <div>finish: {finishReason}</div>
@@ -468,8 +468,8 @@ function groupIntoUserPrompts(data: LlmPromptAndResponse[]): AllPromptsForUserIn
           const usage = item.usage;
           return sum + usage.completionTokens;
         }, 0);
-        const totalChefTokens = currentGroup.reduce((sum, item) => {
-          return sum + (item.chefTokens || 0);
+        const totalSynapseTokens = currentGroup.reduce((sum, item) => {
+          return sum + (item.synapseTokens || 0);
         }, 0);
 
         // Collect unique model IDs using a Set
@@ -483,7 +483,7 @@ function groupIntoUserPrompts(data: LlmPromptAndResponse[]): AllPromptsForUserIn
             cachedCompletionTokens,
             totalOutputTokens,
             modelId: Array.from(uniqueModelIds),
-            totalChefTokens,
+            totalSynapseTokens,
           },
         });
         currentGroup = [];
@@ -535,9 +535,9 @@ function UserPrompt({ group }: { group: AllPromptsForUserInteraction }) {
           </div>
           <div>
             <span className="font-semibold text-gray-900 dark:text-gray-100">
-              {formatNumber(group.summary.totalChefTokens)}
+              {formatNumber(group.summary.totalSynapseTokens)}
             </span>{' '}
-            chef tokens (${formatChefTokenPrice(group.summary.totalChefTokens)})
+            synapse tokens (${formatSynapseTokenPrice(group.summary.totalSynapseTokens)})
           </div>
         </div>
       </div>
@@ -596,18 +596,18 @@ export default function DebugAllPromptsForChat({ chatInitialId, onClose, isDebug
         promptTokens: acc.promptTokens + group.summary.totalCompletionTokens,
         cachedPromptTokens: acc.cachedPromptTokens + group.summary.cachedCompletionTokens,
         completionTokens: acc.completionTokens + group.summary.totalOutputTokens,
-        chefTokens: acc.chefTokens + group.summary.totalChefTokens,
+        synapseTokens: acc.synapseTokens + group.summary.totalSynapseTokens,
       };
     },
     {
       promptTokens: 0,
       cachedPromptTokens: 0,
       completionTokens: 0,
-      chefTokens: 0,
+      synapseTokens: 0,
     },
   );
 
-  const totalPrice = formatChefTokenPrice(totals.chefTokens);
+  const totalPrice = formatSynapseTokenPrice(totals.synapseTokens);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -676,8 +676,8 @@ export default function DebugAllPromptsForChat({ chatInitialId, onClose, isDebug
               total completion tokens
             </div>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(totals.chefTokens)}</span>{' '}
-              total chef tokens (${totalPrice})
+              <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(totals.synapseTokens)}</span>{' '}
+              total synapse tokens (${totalPrice})
             </div>
           </div>
         </div>
