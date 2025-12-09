@@ -1,0 +1,6 @@
+packages:
+  - 'synapseshot'
+  - 'test-kitchen'
+  - 'synapse-agent'
+  # You can add more workspace packages here later if needed
+  # - "packages/*"
